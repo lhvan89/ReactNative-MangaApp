@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ListView, ActivityIndicator, Image, Dimensions} from 'react-native';
+import { View, ListView, ActivityIndicator, Image, Dimensions} from 'react-native';
 
 export default class ChapterScreen extends React.Component {
 

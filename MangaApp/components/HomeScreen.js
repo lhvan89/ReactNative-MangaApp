@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, Button, Image, View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'; 
+import { StyleSheet, Text, Image, View, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'; 
 import { ListItem, SearchBar } from 'react-native-elements';
 
 import GridView from 'react-native-super-grid';
@@ -19,10 +19,6 @@ export default class HomeScreen extends React.Component {
       isLoading: true,
       isGridView: true
     }
-  };
-
-  renderHeader = () => {
-    return <SearchBar placeholder="Type here..." lightTheme round />
   };
 
   renderFooter = () => {
@@ -50,6 +46,13 @@ export default class HomeScreen extends React.Component {
     if(this.state.isGridView) {
       return(
         <View style={{backgroundColor: '#161B21'}}>
+          <SearchBar
+            ref='searchBar'
+            placeholder='Search'
+            onChangeText={this.search}
+            onSearchButtonPress={this.search}
+            onCancelButtonPress={this.search}
+          />
           <GridView
             itemDimension={100}
             items={this.state.dataSource}
@@ -82,7 +85,6 @@ export default class HomeScreen extends React.Component {
               </TouchableOpacity>
             )}
             keyExtractor={item => item.i}
-            ListHeaderComponent = {this.renderHeader}
             ListFooterComponent = {this.renderFooter}
           />
         </View>
@@ -106,6 +108,10 @@ export default class HomeScreen extends React.Component {
     .catch((error) =>{
       console.error(error);
     });
+  }
+
+  search() {
+    console.log("search")
   }
 }
 

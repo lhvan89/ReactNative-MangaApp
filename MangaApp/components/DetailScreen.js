@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList, ActivityIndicator, Image, TouchableOpacity, ListView } from 'react-native';
-import { ListItem } from 'react-native-elements';
+import { StyleSheet, View, Text, ActivityIndicator, Image, TouchableOpacity, ListView } from 'react-native';
 
 export default class DetailsScreen extends React.Component {
 
@@ -56,13 +55,13 @@ export default class DetailsScreen extends React.Component {
             dataSource={this.state.chapterList}
             renderRow={(rowData) => 
             <TouchableOpacity onPress={() => { this.props.navigation.navigate('Chapter', {chapter: rowData}) }}>
-              <Text style={{padding:10, color: '#B7D1F7', borderBottomWidth: 1, borderBottomColor: 'white'}}>{rowData[2]}</Text>
+              <Text style={{padding:10, color: '#B7D1F7'}}>{rowData[2]}</Text>
+              <View style={{paddingLeft: 10, height:1, backgroundColor: '#302E30'}}></View>
             </TouchableOpacity>
-            }
+            } 
           />
         </View>
       </View>
-
     )
   }
 
