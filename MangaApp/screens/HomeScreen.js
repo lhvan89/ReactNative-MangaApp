@@ -85,7 +85,7 @@ export default class HomeScreen extends React.Component {
             itemDimension={100}
             items={this.state.data}
             renderItem={item => (
-            <TouchableOpacity onPress={() => { this.props.navigation.navigate('Detail', {id: item.i}) }}>
+            <TouchableOpacity onPress={() => { this.props.navigation.navigate('Detail', {id: item.i, title: item.t}) }}>
               <View style={{flex: 1}}>
                 <Image source={{uri: global.hostImage + item.im}} style={{width:'100%', height: 133}} />
 
@@ -103,7 +103,7 @@ export default class HomeScreen extends React.Component {
           <FlatList
             data={this.state.data}
             renderItem={({item}) => (
-              <TouchableOpacity onPress={() => { this.props.navigation.navigate('Details', {id: item.i}) }}>
+              <TouchableOpacity onPress={() => { this.props.navigation.navigate('Details', { title: item.t, id: item.i }) }}>
                 <ListItem
                   roundAvatar
                   title={`${item.t}`}

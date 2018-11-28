@@ -12,12 +12,22 @@ export default class ChapterScreen extends React.Component {
         }
     };
 
-    static navigationOptions = {
-        title: "Chapter page",
+    // static navigationOptions = {
+    //     title: "Chapter page",
+    //     headerTintColor: '#ffffff',
+    //     headerStyle: {
+    //       backgroundColor: '#33363B',
+    //     }
+    // };
+
+    static navigationOptions = ({ navigation }) => {
+      return {
+        title: navigation.getParam('title', 'Chapter'),
         headerTintColor: '#ffffff',
         headerStyle: {
           backgroundColor: '#33363B',
         }
+      };
     };
 
     render() {
