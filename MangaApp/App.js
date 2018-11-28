@@ -13,7 +13,9 @@ export default class App extends React.Component {
   render() {
 
     global.screenWidth = Dimensions.get('window').width
-    global.apiHost = 'https://api-dev.shoe-buddy.com'
+    global.apiLogin = 'https://api-dev.shoe-buddy.com/login'
+    global.apiHost = 'https://www.mangaeden.com'
+    global.hostImage = 'https://cdn.mangaeden.com/mangasimg/'
 
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (

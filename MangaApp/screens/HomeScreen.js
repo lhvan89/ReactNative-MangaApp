@@ -28,12 +28,21 @@ export default class HomeScreen extends React.Component {
     this.requestManga();
   }
 
+  componentWillMount() {
+    clearTimeout(this.timeout);
+  }
+
   renderHeader = () => {
     return (
       <SearchBar
         placeholder="Type Here..."
         round
-        onChangeText={text => this.searchFilterFunction(text)}
+        // onChangeText={text => this.searchFilterFunction(text)}
+        onChangeText={(text) => {
+          this.text = text;
+          clearTimeout(this.timeout);
+          this.timeout = setTimeout(() => this.searchFilterFunction(this.text), 500);
+        }}
         autoCorrect={false}
       />
     )
@@ -48,7 +57,8 @@ export default class HomeScreen extends React.Component {
   };
 
   searchFilterFunction = text => {
-    console.log(this.arrayholder);
+    console.log(text);
+    // console.log(this.arrayholder);
     const newData = this.arrayholder.filter(item => {
       const itemData = `${item.t.toUpperCase()}`;
       const textData = text.toUpperCase();
@@ -77,7 +87,7 @@ export default class HomeScreen extends React.Component {
             renderItem={item => (
             <TouchableOpacity onPress={() => { this.props.navigation.navigate('Detail', {id: item.i}) }}>
               <View style={{flex: 1}}>
-                <Image source={{uri: 'https://cdn.mangaeden.com/mangasimg/' + item.im}} style={{width:'100%', height: 133}} />
+                <Image source={{uri: global.hostImage + item.im}} style={{width:'100%', height: 133}} />
 
                 <Text style={{position:'absolute', width:'100%', textAlign: 'center', fontSize: 12 , bottom: 0, backgroundColor:'black', opacity: 0.9, color: '#B1C7E8', alignSelf: 'stretch'}}>{item.t}</Text>
               </View>
@@ -86,7 +96,6 @@ export default class HomeScreen extends React.Component {
             ListHeaderComponent = {this.renderHeader}
           />
         </View>
-
       )
     } else{
       return(
@@ -113,7 +122,7 @@ export default class HomeScreen extends React.Component {
   }
 
   requestManga = () => {
-    const url = `https://www.mangaeden.com/api/list/0/`;
+    const url = global.apiHost + '/api/list/0/';
     this.setState({ loading: true });
 
     fetch(url)

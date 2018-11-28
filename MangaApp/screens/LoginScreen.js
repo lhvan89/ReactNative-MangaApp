@@ -5,7 +5,7 @@ export default class LoginScreen extends React.Component {
     static navigationOptions = {
         header: null
     }
-
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -13,8 +13,6 @@ export default class LoginScreen extends React.Component {
             password: 'Aa@123456'
         };
     }
-
-
 
     render() {
         return(
@@ -47,7 +45,7 @@ export default class LoginScreen extends React.Component {
 
     login = async () => {
 
-        let response = await fetch(global.apiHost+'/login', {
+        let response = await fetch(global.apiLogin, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
