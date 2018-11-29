@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Platform, TouchableOpacity } from 'react-native';
+import { Modal, StyleSheet, Text, View, Image, Platform, TouchableOpacity } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { Constants, Location, Permissions } from 'expo';
+
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default class MapScreen extends React.Component {
 
@@ -25,15 +27,18 @@ export default class MapScreen extends React.Component {
                 longitudeDelta: 0.0421,
             },
             location: {
-                latitude: 10.803057684484573,
-                longitude: 106.72133010970612,
+                latitude: 10.8030533,
+                longitude: 106.720833,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             },
             destination: {
-                latitude: 10.773734,
-                longitude: 106.698066
-            }
+                latitude: 10.8030533,
+                longitude: 106.720833,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            },
+            modalAutocompleteVisible: false,
         };
         this.getDataMarkers();
     }
@@ -44,13 +49,93 @@ export default class MapScreen extends React.Component {
                 errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
             });
         } else {
-            this._getLocationAsync();
+            this.getLocationAsync();
         }
     }
 
     render() {
         return (
             <View style={{flex: 1}}>
+            <View style={{marginTop:22}}>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.modalAutocompleteVisible}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}>
+                    <GooglePlacesAutocomplete
+                        placeholder='Search'
+                        minLength={2} // minimum length of text to search
+                        autoFocus={false}
+                        fetchDetails={true}
+                        onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                            console.log(data)
+                            console.log(details)
+
+                            global.maker = {
+                                id: data.id,
+                                latlng:{
+                                    latitude: details.geometry.location.lat,
+                                    longitude: details.geometry.location.lng
+                                },
+                                title: data.structured_formatting.main_text,
+                                description: data.structured_formatting.secondary_text,
+                                image: require('./../assets/images/marker.png')
+                            }
+                            global.location = {
+                                latitude: global.maker.latlng.latitude,
+                                longitude: global.maker.latlng.longitude,
+                                latitudeDelta: 0.0922,
+                                longitudeDelta: 0.0421,
+                            }
+
+                            this.setState((prevState) => ({
+                                markers: [...prevState.markers, global.maker],
+                                location: global.location
+                            }));
+                            this.setModalAutocompleteVisible(!this.state.modalAutocompleteVisible);
+                        }}
+                        getDefaultValue={() => {
+                        return ''; // text input default value
+                        }}
+                        query={{
+                        // available options: https://developers.google.com/places/web-service/autocomplete
+                        key: 'AIzaSyCV_USBqXyJegasxHc7HyP83rk6k3rdawY',
+                        language: 'en', // language of the results
+                        types: '(cities)', // default: 'geocode'
+                        }}
+                        styles={{
+                        description: {
+                            fontWeight: 'bold',
+                        },
+                        predefinedPlacesDescription: {
+                            color: '#1faadb',
+                        },
+                        }}
+                        
+                        // currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+                        // currentLocationLabel="Current location"
+                        nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                        GoogleReverseGeocodingQuery={{
+                        // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                        }}
+                        GooglePlacesSearchQuery={{
+                        // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                        rankby: 'distance',
+                        types: 'food',
+                        }}
+                        
+                        
+                        filterReverseGeocodingByTypes={['locality', 'administrative_area_level_1']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                        
+                        // predefinedPlaces={[homePlace, workPlace]}
+                        
+                        predefinedPlacesAlwaysVisible={true}
+                    />
+                </Modal>
+                </View>
+                
                 <MapView 
                     style={styles.mapView}
                     provider={PROVIDER_GOOGLE}
@@ -62,16 +147,17 @@ export default class MapScreen extends React.Component {
                             coordinate={marker.latlng}
                             image={marker.image}
                             onPress={() => {
-                                this.setState({
-                                    destination: {
-                                        latitude: marker.latlng.latitude,
-                                        longitude: marker.latlng.longitude
-                                    }
-                                })
+                                global.maker = marker
+                                global.location = {
+                                    latitude: marker.latlng.latitude,
+                                    longitude: marker.latlng.longitude,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }
                             }}
                             onCalloutPress={() => {
-                                marker.hideCallout();
-                            }}> 
+                                this.marker.hideCallout();
+                            }}>
                             <Callout
                                 tooltip={true}>
                                 <View style={styles.callout}>
@@ -89,13 +175,33 @@ export default class MapScreen extends React.Component {
                         apikey={'AIzaSyCYvMpmVhFc0ydILEuXGJNYNGFnBoKPCL8'}
                     />
                 </MapView>
+
                 <TouchableOpacity
                     style={styles.myLocation}
                     onPress={this.findMyLocation}>
                     <Image source={require('../assets/images/my-location.png')} />
                 </TouchableOpacity>
+                
+                <TouchableOpacity
+                    style={styles.directionButton}
+                    onPress={this.getDirection}>
+                    <Image source={require('../assets/images/direction.png')} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.searchButton}
+                    onPress={() => {
+                        this.setModalAutocompleteVisible(true);
+                    }} >
+                    <Image source={require('../assets/images/search.png')} />
+                </TouchableOpacity>
+                
             </View>
         );
+    }
+
+    setModalAutocompleteVisible(visible) {
+        this.setState({modalAutocompleteVisible: visible});
     }
 
     getDataMarkers = async () => {
@@ -122,7 +228,17 @@ export default class MapScreen extends React.Component {
         }
     };
 
-    _getLocationAsync = async () => {
+    getDirection = async () => {
+        this.setState({
+            destination: {
+                latitude: global.maker.latlng.latitude,
+                longitude: global.maker.latlng.longitude
+            }, 
+            location: global.location
+        })
+    }
+
+    getLocationAsync = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
             this.setState({
@@ -153,7 +269,11 @@ export default class MapScreen extends React.Component {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             },
-            markers: [...prevState.markers, myMarker]
+            markers: [...prevState.markers, myMarker],
+            destination: {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+            }
         }));
     };
 
@@ -177,6 +297,16 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 30,
         right: 30
+    },
+    directionButton: {
+        position: 'absolute',
+        bottom: 90,
+        right: 30
+    },
+    searchButton: {
+        position: 'absolute',
+        bottom: 30,
+        left: 30
     },
     callout: {
         backgroundColor: 'white',
