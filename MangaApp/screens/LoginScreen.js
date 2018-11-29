@@ -63,7 +63,7 @@ export default class LoginScreen extends React.Component {
                 'Error',
                 responseJson.message,
                 [
-                    {text: 'OK'},
+                    {text: 'OK'}
                 ],
                 { cancelable: false }
             )
