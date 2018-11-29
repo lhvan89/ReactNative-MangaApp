@@ -41,7 +41,7 @@ export default class HomeScreen extends React.Component {
         onChangeText={(text) => {
           this.text = text;
           clearTimeout(this.timeout);
-          this.timeout = setTimeout(() => this.searchFilterFunction(this.text), 500);
+          this.timeout = setTimeout(() => this.searchFilterFunction(this.text), 2000);
         }}
         autoCorrect={false}
       />

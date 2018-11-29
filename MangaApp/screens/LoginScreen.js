@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
 
 export default class LoginScreen extends React.Component {
     static navigationOptions = {
@@ -17,6 +17,7 @@ export default class LoginScreen extends React.Component {
     render() {
         return(
             <View style={styles.body}>
+                <Image style={{width: 243, height: 29}} source={{uri: 'https://cdn.mangaeden.com/images/logo2.png'}} />
                 <View style={styles.container}>
                     <TextInput
                         value={this.state.username}

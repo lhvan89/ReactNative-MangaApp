@@ -21,7 +21,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vanle.TryGoogleMap",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDvhpGT_OcyrEwh3AxDp-HyvAXGk_Rl6vY"
+      }
     }
   }
 }
