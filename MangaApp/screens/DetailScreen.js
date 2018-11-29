@@ -56,10 +56,12 @@ export default class DetailsScreen extends React.Component {
           <ListView style={{paddingLeft: 20}}
             dataSource={this.state.chapterList}
             renderRow={(rowData) => 
-            <TouchableOpacity onPress={() => { this.props.navigation.navigate('Chapter', {chapter: rowData, title: rowData[2]}) }}>
-              <Text style={{padding:10, color: '#B7D1F7'}}>{rowData[2]}</Text>
-              <View style={{paddingLeft: 10, height:1, backgroundColor: '#302E30'}}></View>
-            </TouchableOpacity>
+              <View>
+                <TouchableOpacity onPress={() => { this.props.navigation.navigate('Chapter', {chapter: rowData, title: rowData[2]}) }}>
+                  <Text style={{padding:10, color: '#B7D1F7'}}>{rowData[2]}</Text>
+                </TouchableOpacity>
+                <View style={{paddingLeft: 10, height:1, backgroundColor: '#302E30'}}></View>
+              </View>
             }
           />
         </View>

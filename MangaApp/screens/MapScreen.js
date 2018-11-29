@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
 
 export default class MapScreen extends React.Component {
 
   static navigationOptions = {
-    title: 'Home',
+    title: 'Map',
     headerTintColor: '#ffffff',
     headerStyle: {
       backgroundColor: '#33363B',
@@ -15,60 +16,23 @@ export default class MapScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      markers: [
-        {
-          id: 1,
-          latlng: {
-            latitude: 10.800194,
-            longitude: 106.718579,
-          },
-          title: 'CGV Pearl Plaza',
-          description: "Toà nhà Pearl Plaza, 561 Điện Biên Phủ, Phường 25, Bình Thạnh, Hồ Chí Minh, Việt Nam"
-        },
-        {
-          id: 2,
-          latlng: {
-            latitude: 10.803914,
-            longitude: 106.720381,
-          },
-          title: 'The Vintage Coffee House',
-          description: "167 Nguyen Van Thuong Street - Ward 25 - Binh Thanh District, 167 Đường Đường Nguyễn Văn Thương, Phường 25, Bình Thạnh, Hồ Chí Minh, Việt Nam"
-        },
-        {
-          id: 3,
-          latlng: {
-            latitude: 10.803324,
-            longitude: 106.719802,
-          },
-          title: 'Phòng Khám Da Liễu O2 SKIN Bình Thạnh',
-          description: "Số 2 Đường Võ Oanh, Phường 25, Bình Thạnh, Hồ Chí Minh 700000, Việt Nam"
-        },
-        {
-          id: 4,
-          latlng: {
-            latitude: 10.810921,
-            longitude: 106.708948,
-          },
-          title: 'Cafe Thủy Trúc',
-          description: "197 Đinh Bộ Lĩnh, Phường 26, Bình Thạnh, Hồ Chí Minh, Việt Nam"
-        },
-        {
-          id: 5,
-          latlng: {
-            latitude: 10.802658,
-            longitude: 106.714613,
-          },
-          title: 'Đại học Hutech',
-          description: "475 A Điện Biên Phủ, Phường 25, Bình Thạnh, Hồ Chí Minh, Việt Nam"
-        },
-      ],
+      markers: [],
       myLocation: {
         latitude: 10.8030533,
         longitude: 106.720833,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
-    }
+      origin: {
+        latitude: 10.803914,
+        longitude: 106.720381,
+      },
+      destination: {
+        latitude: 10.810921,
+        longitude: 106.708948,
+      }
+    };
+    this.getDataMarkers();
   }
 
   render() {
@@ -96,6 +60,13 @@ export default class MapScreen extends React.Component {
                 </Callout>
             </Marker>
         ))}
+        <MapViewDirections
+          origin={this.state.origin}
+          destination={this.state.destination}
+          strokeWidth={3}
+  				strokeColor="hotpink"
+          apikey={'AIzaSyCYvMpmVhFc0ydILEuXGJNYNGFnBoKPCL8'}
+        />
         </MapView>
         <TouchableOpacity
           style={styles.myLocation}
@@ -106,6 +77,32 @@ export default class MapScreen extends React.Component {
       </View>
     );
   }
+
+    getDataMarkers = async () => {
+      let response = await fetch('https://api.myjson.com/bins/quk6a', {
+          method: 'GET',
+      });
+      let responseJson = await response.json();
+      if (response.status >= 400) {
+          Alert.alert(
+              'Error',
+              responseJson.message,
+              [
+                  {text: 'OK'},
+              ],
+              { cancelable: false }
+          )
+      } else {
+          responseJson.data.map((data) => {
+              // data.image = require('./../assets/pin.png');
+
+              this.setState((prevState) => ({
+                  markers: [...prevState.markers, data]
+              }));
+          });
+
+      }
+  };
 
   findMyLocation = () => {
     this.setState(({
