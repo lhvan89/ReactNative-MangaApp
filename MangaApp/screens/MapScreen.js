@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker, Callout } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import { Location, Permissions } from 'expo';
 
 export default class MapScreen extends React.Component {
 
@@ -23,17 +24,34 @@ export default class MapScreen extends React.Component {
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       },
+      location: {
+        latitude: 10.803057684484573,
+        longitude: 106.72133010970612,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      },
       origin: {
         latitude: 10.803914,
         longitude: 106.720381,
       },
       destination: {
-        latitude: 10.810921,
-        longitude: 106.708948,
+        latitude: 10.773734,
+				longitude: 106.698066
       }
     };
     this.getDataMarkers();
   }
+
+  componentWillMount() {
+    this._getLocationAsync();
+    // if (Platform.OS === 'android' && !Constants.isDevice) {
+    //     this.setState({
+    //         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+    //     });
+    // } else {
+    //     this._getLocationAsync();
+    // }
+}
 
   render() {
     return (
@@ -41,7 +59,8 @@ export default class MapScreen extends React.Component {
         <MapView 
           style={styles.mapView}
           provider={PROVIDER_GOOGLE}
-          region={this.state.myLocation} >
+          region={this.state.location}
+          initialRegion={this.state.region} >
           {this.state.markers.map((marker) => (
             <Marker
                 key={marker.id}
@@ -50,7 +69,7 @@ export default class MapScreen extends React.Component {
                 onPress={() => {}}
                 onCalloutPress={() => {
                     marker.hideCallout();
-                }}>
+                }}> 
                 <Callout
                     tooltip={true}>
                     <View style={styles.callout}>
@@ -78,8 +97,8 @@ export default class MapScreen extends React.Component {
     );
   }
 
-    getDataMarkers = async () => {
-      let response = await fetch('https://api.myjson.com/bins/quk6a', {
+  getDataMarkers = async () => {
+      let response = await fetch('https://api.myjson.com/bins/i3hky', {
           method: 'GET',
       });
       let responseJson = await response.json();
@@ -94,7 +113,7 @@ export default class MapScreen extends React.Component {
           )
       } else {
           responseJson.data.map((data) => {
-              // data.image = require('./../assets/pin.png');
+              data.image = require('./../assets/images/marker.png');
 
               this.setState((prevState) => ({
                   markers: [...prevState.markers, data]
@@ -103,6 +122,41 @@ export default class MapScreen extends React.Component {
 
       }
   };
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+        this.setState({
+            errorMessage: 'Permission to access location was denied',
+        });
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    let myMarker = {
+        id: 0,
+        latlng: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+        },
+        image: require('./../assets/images/current-location.png'),
+        title: "My location",
+        description: "My location address"
+    }
+    this.setState(prevState => ({
+        location: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+        },
+        myLocation: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+        },
+        markers: [...prevState.markers, myMarker]
+    }));
+};
 
   findMyLocation = () => {
     this.setState(({
