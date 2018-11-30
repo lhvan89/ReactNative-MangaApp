@@ -105,7 +105,7 @@ export default class HomeScreen extends React.Component {
                         roundAvatar
                         title={`${item.t}`}
                         subtitle={`${item.c}`}
-                        avatar={{ uri: "https://cdn.mangaeden.com/mangasimg/" + item.im}}
+                        avatar={{ uri: global.hostImage + item.im}}
                         />
                     </TouchableOpacity>
                     )}
@@ -119,7 +119,7 @@ export default class HomeScreen extends React.Component {
     }
 
     requestManga = () => {
-        const url = global.apiHost + '/api/list/0/';
+        const url = global.apiMangaList;
         this.setState({ loading: true });
 
         fetch(url)

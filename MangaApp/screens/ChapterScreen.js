@@ -35,7 +35,7 @@ export default class ChapterScreen extends React.Component {
                 <ListView
                     dataSource={this.state.chapterImages}
                     renderRow={(rowData) => 
-                        <Image source={{uri: 'https://cdn.mangaeden.com/mangasimg/' + rowData[1]}} style={{width:this.deviceWidth, height: this.deviceWidth * rowData[3] / rowData[2]}} />
+                        <Image source={{uri: global.hostImage + rowData[1]}} style={{width:this.deviceWidth, height: this.deviceWidth * rowData[3] / rowData[2]}} />
                     }
                 />
             </View>
@@ -44,7 +44,7 @@ export default class ChapterScreen extends React.Component {
 
     componentDidMount() {
 
-        return fetch('https://www.mangaeden.com/api/chapter/' + this.props.navigation.state.params.chapter[3])
+        return fetch(global.apiChapter + this.props.navigation.state.params.chapter[3])
         .then((response) => response.json())
         .then((responseJson) => {
     

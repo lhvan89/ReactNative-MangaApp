@@ -56,7 +56,6 @@ export default class MapScreen extends React.Component {
     render() {
         return (
             <View style={{flex: 1}}>
-            <View style={{marginTop:22}}>
                 <Modal
                     animationType="slide"
                     transparent={false}
@@ -64,15 +63,27 @@ export default class MapScreen extends React.Component {
                     onRequestClose={() => {
                         Alert.alert('Modal has been closed.');
                     }}>
+                    {/* <View style={{height:22}}></View> */}
+                    <View style={{ height: 50 }}>
+                        <TouchableOpacity
+                            style={{position: 'absolute', right: 10, bottom: 10}}
+                            onPress={() => {
+                                this.setModalAutocompleteVisible(!this.state.modalAutocompleteVisible)
+                            }}>
+                            <Text>Hide Search</Text>
+                        </TouchableOpacity>
+                        
+                    </View>
                     <GooglePlacesAutocomplete
                         placeholder='Search'
                         minLength={2} // minimum length of text to search
                         autoFocus={false}
                         fetchDetails={true}
+                        returnKeyType={'search'} // Can be left out for default return key 
+                        listViewDisplayed="auto" // true/false/undefined
                         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                            console.log(data)
-                            console.log(details)
-
+                            // console.log(data)
+                            // console.log(details)
                             global.maker = {
                                 id: data.id,
                                 latlng:{
@@ -81,7 +92,7 @@ export default class MapScreen extends React.Component {
                                 },
                                 title: data.structured_formatting.main_text,
                                 description: data.structured_formatting.secondary_text,
-                                image: require('./../assets/images/marker.png')
+                                image: require('../assets/images/marker.png')
                             }
                             global.location = {
                                 latitude: global.maker.latlng.latitude,
@@ -102,7 +113,7 @@ export default class MapScreen extends React.Component {
                         query={{
                         // available options: https://developers.google.com/places/web-service/autocomplete
                         key: 'AIzaSyCV_USBqXyJegasxHc7HyP83rk6k3rdawY',
-                        language: 'en', // language of the results
+                        language: 'vi', // language of the results
                         types: '(cities)', // default: 'geocode'
                         }}
                         styles={{
@@ -127,14 +138,13 @@ export default class MapScreen extends React.Component {
                         }}
                         
                         
-                        filterReverseGeocodingByTypes={['locality', 'administrative_area_level_1']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                        filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
                         
                         // predefinedPlaces={[homePlace, workPlace]}
                         
                         predefinedPlacesAlwaysVisible={true}
                     />
                 </Modal>
-                </View>
                 
                 <MapView 
                     style={styles.mapView}
@@ -220,7 +230,7 @@ export default class MapScreen extends React.Component {
             )
         } else {
             responseJson.data.map((data) => {
-                data.image = require('./../assets/images/marker.png');
+                data.image = require('../assets/images/marker.png');
                 this.setState((prevState) => ({
                     markers: [...prevState.markers, data]
                 }));
@@ -252,7 +262,7 @@ export default class MapScreen extends React.Component {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             },
-            image: require('./../assets/images/current-location.png'),
+            image: require('../assets/images/current-location.png'),
             title: "My location",
             description: "My location address"
         }

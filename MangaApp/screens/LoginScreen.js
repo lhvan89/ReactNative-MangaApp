@@ -17,7 +17,7 @@ export default class LoginScreen extends React.Component {
     render() {
         return(
             <View style={styles.body}>
-                <Image style={{width: 243, height: 29}} source={{uri: 'https://cdn.mangaeden.com/images/logo2.png'}} />
+                <Image style={{width: 243, height: 29}} source={require('../assets/images/logo.png')} />
                 <View style={styles.container}>
                     <TextInput
                         value={this.state.username}

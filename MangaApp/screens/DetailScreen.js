@@ -32,7 +32,7 @@ export default class DetailsScreen extends React.Component {
             <View style={styles.container}>
                 <View style={styles.infoView}>
                     <View style={styles.imageView}>
-                        <Image source={{uri: 'https://cdn.mangaeden.com/mangasimg/' + this.state.dataSource.image}} style={{width:90, height:120}} />
+                        <Image source={{uri: global.hostImage + this.state.dataSource.image}} style={{width:90, height:120}} />
                     </View> 
                     <View style={styles.detailView}>
                         <View style={styles.textView}></View>
@@ -70,7 +70,7 @@ export default class DetailsScreen extends React.Component {
 
     componentDidMount() {
 
-        return fetch('https://www.mangaeden.com/api/manga/' + this.props.navigation.state.params.id)
+        return fetch(global.apiMangaDetail + this.props.navigation.state.params.id)
         .then((response) => response.json())
         .then((responseJson) => {
 
