@@ -58,7 +58,7 @@ export default class HomeScreen extends React.Component {
     searchFilterFunction = text => {
         console.log(text);
         const newData = this.arrayholder.filter(item => {
-            const itemData = `${item.t.toUpperCase()}`;
+            const itemData = `${item.t.toUpperCase()} ${item.a.toUpperCase()}`;
             const textData = text.toUpperCase();
             return itemData.indexOf(textData) > -1;
         });
