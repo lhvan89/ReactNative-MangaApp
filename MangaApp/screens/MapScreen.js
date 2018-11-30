@@ -39,6 +39,7 @@ export default class MapScreen extends React.Component {
                 longitudeDelta: 0.0421,
             },
             modalAutocompleteVisible: false,
+            isShowSearchButton: true
         };
         this.getDataMarkers();
     }
@@ -114,7 +115,7 @@ export default class MapScreen extends React.Component {
                         // available options: https://developers.google.com/places/web-service/autocomplete
                         key: 'AIzaSyCV_USBqXyJegasxHc7HyP83rk6k3rdawY',
                         language: 'vi', // language of the results
-                        types: '(cities)', // default: 'geocode'
+                        //types: '(cities)', // default: 'geocode'
                         }}
                         styles={{
                         description: {
@@ -138,7 +139,7 @@ export default class MapScreen extends React.Component {
                         }}
                         
                         
-                        filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                        filterReverseGeocodingByTypes={["administrative_area_level_1", "administrative_area_level_2", "administrative_area_level_3", "administrative_area_level_4", "administrative_area_level_5", "colloquial_area", "country", "establishment", "finance", "floor", "food", "general_contractor", "geocode", "health", "intersection", "locality", "natural_feature", "neighborhood", "place_of_worship", "political", "point_of_interest", "post_box", "postal_code", "postal_code_prefix", "postal_code_suffix", "postal_town", "premise", "room", "route", "street_address", "street_number", "sublocality", "sublocality_level_4", "sublocality_level_5", "sublocality_level_3", "sublocality_level_2", "sublocality_level_1", "subpremise"]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
                         
                         // predefinedPlaces={[homePlace, workPlace]}
                         
@@ -151,8 +152,9 @@ export default class MapScreen extends React.Component {
                     provider={PROVIDER_GOOGLE}
                     region={this.state.location}
                     initialRegion={this.state.region} >
+                    
                     {this.state.markers.map((marker) => (
-                        <Marker
+                        <Marker draggable
                             key={marker.id}
                             coordinate={marker.latlng}
                             image={marker.image}
@@ -191,12 +193,13 @@ export default class MapScreen extends React.Component {
                     onPress={this.findMyLocation}>
                     <Image source={require('../assets/images/my-location.png')} />
                 </TouchableOpacity>
-                
-                <TouchableOpacity
-                    style={styles.directionButton}
-                    onPress={this.getDirection}>
-                    <Image source={require('../assets/images/direction.png')} />
-                </TouchableOpacity>
+                { this.state.isShowSearchButton && 
+                    <TouchableOpacity
+                        style={styles.directionButton}
+                        onPress={this.getDirection}>
+                        <Image source={require('../assets/images/direction.png')} />
+                    </TouchableOpacity>
+                }
 
                 <TouchableOpacity
                     style={styles.searchButton}
