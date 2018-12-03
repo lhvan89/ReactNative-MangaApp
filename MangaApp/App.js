@@ -15,7 +15,7 @@ export default class App extends React.Component {
     global.screenWidth = Dimensions.get('window').width
 
     // API
-    global.apiLogin = 'https://api-dev.shoe-buddy.com/login'
+    global.apiLogin = '' // try Shoe Buddy login api
     global.apiMangaList = 'https://www.mangaeden.com/api/list/0/'
     global.apiMangaDetail = 'https://www.mangaeden.com/api/manga/'
     global.apiChapter = 'https://www.mangaeden.com/api/chapter/'

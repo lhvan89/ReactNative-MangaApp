@@ -39,7 +39,7 @@ export default class MapScreen extends React.Component {
                 longitudeDelta: 0.0421,
             },
             modalAutocompleteVisible: false,
-            isShowSearchButton: true
+            showDirectionButton: false
         };
         this.getDataMarkers();
     }
@@ -107,6 +107,7 @@ export default class MapScreen extends React.Component {
                                 location: global.location
                             }));
                             this.setModalAutocompleteVisible(!this.state.modalAutocompleteVisible);
+                            this.setDirectionButtonVisible(!this.state.showDirectionButton)
                         }}
                         getDefaultValue={() => {
                         return ''; // text input default value
@@ -149,7 +150,7 @@ export default class MapScreen extends React.Component {
                 
                 <MapView 
                     style={styles.mapView}
-                    // provider={PROVIDER_GOOGLE}
+                    provider={PROVIDER_GOOGLE}
                     region={this.state.location}
                     initialRegion={this.state.region} >
                     
@@ -166,6 +167,10 @@ export default class MapScreen extends React.Component {
                                     latitudeDelta: 0.0922,
                                     longitudeDelta: 0.0421,
                                 }
+                                this.setState({
+                                    location: global.location
+                                })
+                                this.setDirectionButtonVisible(true)
                             }}
                             onCalloutPress={() => {
                                 this.marker.hideCallout();
@@ -193,7 +198,7 @@ export default class MapScreen extends React.Component {
                     onPress={this.findMyLocation}>
                     <Image source={require('../assets/images/my-location.png')} />
                 </TouchableOpacity>
-                { this.state.isShowSearchButton && 
+                { this.state.showDirectionButton && 
                     <TouchableOpacity
                         style={styles.directionButton}
                         onPress={this.getDirection}>
@@ -215,6 +220,10 @@ export default class MapScreen extends React.Component {
 
     setModalAutocompleteVisible(visible) {
         this.setState({modalAutocompleteVisible: visible});
+    }
+
+    setDirectionButtonVisible(visible) {
+        this.setState({showDirectionButton: visible});
     }
 
     getDataMarkers = async () => {
@@ -249,6 +258,7 @@ export default class MapScreen extends React.Component {
             }, 
             location: global.location
         })
+        this.setDirectionButtonVisible(!this.state.showDirectionButton)
     }
 
     getLocationAsync = async () => {

@@ -45,31 +45,32 @@ export default class LoginScreen extends React.Component {
 
 
     login = async () => {
+        this.props.navigation.navigate('Home');
 
-        let response = await fetch(global.apiLogin, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: this.state.username,
-                password: this.state.password
-            }),
-        });
-        let responseJson = await response.json();
-        console.log(responseJson)
-        if (responseJson.status > 0) {
-            Alert.alert(
-                'Error',
-                responseJson.message,
-                [
-                    {text: 'OK'}
-                ],
-                { cancelable: false }
-            )
-        } else {
-            this.props.navigation.navigate('Home');
-        }
+        // let response = await fetch(global.apiLogin, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         username: this.state.username,
+        //         password: this.state.password
+        //     }),
+        // });
+        // let responseJson = await response.json();
+        // console.log(responseJson)
+        // if (responseJson.status > 0) {
+        //     Alert.alert(
+        //         'Error',
+        //         responseJson.message,
+        //         [
+        //             {text: 'OK'}
+        //         ],
+        //         { cancelable: false }
+        //     )
+        // } else {
+        //     this.props.navigation.navigate('Home');
+        // }
     }
 }
 
