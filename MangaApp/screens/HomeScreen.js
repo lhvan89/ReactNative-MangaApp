@@ -130,6 +130,7 @@ export default class HomeScreen extends React.Component {
             error: res.error || null,
             loading: false,
         });
+        console.log(res.manga.length)
         this.arrayholder = res.manga;
         })
         .catch(error => {

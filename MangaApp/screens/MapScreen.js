@@ -83,8 +83,8 @@ export default class MapScreen extends React.Component {
                         returnKeyType={'search'} // Can be left out for default return key 
                         listViewDisplayed="auto" // true/false/undefined
                         onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                            // console.log(data)
-                            // console.log(details)
+                            console.log(data)
+                            console.log(details)
                             global.maker = {
                                 id: data.id,
                                 latlng:{
@@ -149,12 +149,12 @@ export default class MapScreen extends React.Component {
                 
                 <MapView 
                     style={styles.mapView}
-                    provider={PROVIDER_GOOGLE}
+                    // provider={PROVIDER_GOOGLE}
                     region={this.state.location}
                     initialRegion={this.state.region} >
                     
                     {this.state.markers.map((marker) => (
-                        <Marker draggable
+                        <Marker
                             key={marker.id}
                             coordinate={marker.latlng}
                             image={marker.image}
